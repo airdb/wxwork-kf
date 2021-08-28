@@ -1,0 +1,49 @@
+# Ref: https://github.com/serverless-components/tencent-scf/blob/master/docs/configure.md.
+#应用组织信息
+org: '' # 组织名称。留空则则使用默认值为用户appid
+app: 'bbhj' # 应用名称。留空则默认取当前组件的实例名称为app名称。
+#stage: 'test' # 环境名称。默认值是 dev。建议使用${env.STAGE}变量定义环境名称
+stage: ${env.STAGE} # 环境名称。默认值是 dev。建议使用${env.STAGE}变量定义环境名称
+
+component: scf
+name: chi
+
+inputs:
+  src:
+    src: ./
+    hook: "ls"
+    exclude:
+      - .env
+  region: ap-shanghai
+  runtime: Go1
+  handler: main
+  description: https://scf.baobeihuijia.com/${stage}/${name}/
+  memorySize: 128 # 内存大小，单位MB
+  timeout: 20 # 函数执行超时时间，单位秒
+  initTimeout: 3 # 初始化超时时间，单位秒
+
+  environment: #  环境变量
+    variables: #  环境变量对象
+      ENV: ${stage}
+      env: ${stage}
+
+  publicAccess: true # 是否开启公网访问
+
+  events:
+    - apigw:
+        parameters:
+          serviceName: serverless
+          serviceId: service-iw6drlfr
+          domain: scf.baobeihuijia.com
+          protocols:
+            - http
+            - https
+          environment: ${stage}
+          endpoints:
+            - path: /${name}
+              apiName: ${name}
+              method: ANY
+              enableCORS: true
+              function:
+                isIntegratedResponse: true
+                functionQualifier: $DEFAULT
