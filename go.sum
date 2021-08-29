@@ -8,6 +8,8 @@ github.com/PuerkitoBio/purell v1.1.1 h1:WEQqlqaGbrPkxLJWfBwQmfEAE1Z7ONdDLqrN38tN
 github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 h1:d+Bc7a5rLufV/sSk/8dngufqelfh6jnri85riMAaF/M=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
+github.com/airdb/sailor v0.0.0-20210829052130-4c0980ff5ff7 h1:/R9w51dEPGMQEUdcPc2Z8hAdDZc5Qrmvw9U2hTiLjVU=
+github.com/airdb/sailor v0.0.0-20210829052130-4c0980ff5ff7/go.mod h1:Oi3MbY+CLgxw35AL6hqbKvbBy2pSFH2h26SuUv7YMIk=
 github.com/airdb/sailor v0.0.3 h1:qeQ+yIhof0dpjz71+QmPIX03lWkr3hR2cE28E4SDVlY=
 github.com/airdb/sailor v0.0.3/go.mod h1:Oi3MbY+CLgxw35AL6hqbKvbBy2pSFH2h26SuUv7YMIk=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=

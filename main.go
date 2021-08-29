@@ -27,8 +27,8 @@ import (
 
 // @info.x-logo.url: http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host petstore.swagger.io
-// @BasePath /v2
+// @host service-iw6drlfr-1251018873.sh.apigw.tencentcs.com
+// @BasePath /test
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -38,11 +38,8 @@ func main() {
 	r.Get("/chi/item/query", HandleItemQuery)
 
 	fmt.Println("hello", deployutil.GetDeployStage())
-	fs := http.FileServer(http.Dir("docs"))
-	r.Handle("/chi/docs/*", http.StripPrefix("/chi/docs/", fs))
-	r.Handle("/docs/*", http.StripPrefix("/docs/", fs))
 
-	faas.RunTencentChi(r)
+	faas.RunTencentChiWithSwagger(r)
 }
 
 // RootHandler - Returns all the available APIs
