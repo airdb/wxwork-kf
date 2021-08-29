@@ -6,6 +6,7 @@ import (
 
 	"github.com/airdb/sailor/deployutil"
 	"github.com/airdb/sailor/faas"
+	"github.com/airdb/sailor/version"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
@@ -34,7 +35,10 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(render.SetContentType(render.ContentTypeHTML))
 
+	r.Get("/", RootHandler)
 	r.Get("/chi/", RootHandler)
+
+	r.Post("/chi/item/create", HandleItemCreate)
 	r.Get("/chi/item/query", HandleItemQuery)
 
 	fmt.Println("hello", deployutil.GetDeployStage())
@@ -45,24 +49,44 @@ func main() {
 // RootHandler - Returns all the available APIs
 // @Summary Root handler.
 // @Description Tells if the chi-swagger APIs are working or not.
-// @Tags item
+// @Tags version
 // @Accept  json
 // @Produce  json
 // @Success 200 {string} response "api response"
 // @Router / [get]
 func RootHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("welcome hello"))
+	// w.Write([]byte("return version info"))
+	fmt.Println(version.GetBuildInfo())
+	// ret := map[string]interface{}{"feed": "11", "success": true}
+
+	// version.Init()
+	// ret := version.GetBuildInfo()
+	// render.JSON(w, r, ret)
+	render.JSON(w, r, version.GetBuildInfo())
+	w.WriteHeader(http.StatusOK)
+}
+
+// HandleItmeCreate - create item.
+// @Summary Create item.
+// @Description Create item.
+// @Tags item
+// @Accept  json
+// @Produce  json
+// @Success 200 {string} response "api response"
+// @Router /chi/item/create [post]
+func HandleItemCreate(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("create item"))
 	w.WriteHeader(http.StatusOK)
 }
 
 // HandleItmeQuery - query item.
 // @Summary Query item.
-// @Description Tells if the chi-swagger APIs are working or not.
+// @Description Query item api by id or name.
 // @Tags item
 // @Accept  json
 // @Produce  json
 // @Success 200 {string} response "api response"
-// @Router /item/query [get]
+// @Router /chi/item/query [get]
 func HandleItemQuery(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("welcome hello"))
 	w.WriteHeader(http.StatusOK)
