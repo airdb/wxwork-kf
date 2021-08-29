@@ -18,7 +18,7 @@ build:
 swag:
 	swag init --generalInfo main.go
 
-dev:
+dev: swag
 	env=dev go run $(LDFLAGS) main.go
 
 deploy:
