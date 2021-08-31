@@ -35,8 +35,8 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(render.SetContentType(render.ContentTypeHTML))
 
-	r.Get("/", RootHandler)
-	r.Get("/chi/", RootHandler)
+	r.Get("/", faas.HandleVersion)
+	r.Get("/chi/", faas.HandleVersion)
 
 	r.Post("/chi/item/create", HandleItemCreate)
 	r.Get("/chi/item/query", HandleItemQuery)
@@ -48,11 +48,15 @@ func main() {
 
 // RootHandler - Returns all the available APIs
 // @Summary Root handler.
-// @Description Tells if the chi-swagger APIs are working or not.
-// @Tags version
+// @Description Tells if the root APIs are working or not.
+// @Tags root
 // @Accept  json
 // @Produce  json
 // @Success 200 {string} response "api response"
+// @Header 200 {string} Token "jwt"
+// @Failure 400,404 {string} response "4xx"
+// @Failure 500 {string} response "500"
+// @Failure default {string} response "default"
 // @Router / [get]
 func RootHandler(w http.ResponseWriter, r *http.Request) {
 	// w.Write([]byte("return version info"))
@@ -90,4 +94,15 @@ func HandleItemCreate(w http.ResponseWriter, r *http.Request) {
 func HandleItemQuery(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("welcome hello"))
 	w.WriteHeader(http.StatusOK)
+}
+
+func myMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(version.GetBuildInfo().ToString()))
+		// Here we are pssing our custom response writer to the next http handler.
+		next.ServeHTTP(w, r)
+
+		// Here we are adding our custom stuff to the response, which we received after http handler execution.
+		// myResponseWriter.buf.WriteString(" and some additional modifications")
+	})
 }
