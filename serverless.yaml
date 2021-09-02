@@ -26,6 +26,13 @@ inputs:
     variables: #  环境变量对象
       ENV: ${stage}
       env: ${stage}
+      RedisAddr:  "10.0.1.194:3306"
+      RedisPasswd: "BBHJRedis"
+      RedisDB: 2
+      CorpID: "wx4aaa3fe59423b402" # baobeihuijia
+      Secret: "4yYkPAXPUQVO7Kid5E8cDtxCsiWpwYtfn1D5KRR2auM"
+      Token: "JMYUsGTy4dv0Kj9FAGjTa4"
+      EncodingAESKey: "inBMXo9lc5DgI6urpjE5eIBAfFoYtLVzzbeUPYbqEAb"
 
   publicAccess: true # 是否开启公网访问
 
@@ -33,7 +40,7 @@ inputs:
     - apigw:
         parameters:
           serviceName: serverless
-          serviceId: service-5tlk25gv
+          serviceId: service-iw6drlfr
           protocols:
             - http
             - https

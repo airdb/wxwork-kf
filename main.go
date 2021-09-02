@@ -28,10 +28,10 @@ import (
 var (
 	err      error
 	wxOption = sdk.Options{
-		CorpID:         "-",
-		Secret:         "-",
-		Token:          "-",
-		EncodingAESKey: "-",
+		CorpID:         "wx4aaa3fe59423b402",
+		Secret:         "4yYkPAXPUQVO7Kid5E8cDtxCsiWpwYtfn1D5KRR2auM",
+		Token:          "JMYUsGTy4dv0Kj9FAGjTa4",
+		EncodingAESKey: "inBMXo9lc5DgI6urpjE5eIBAfFoYtLVzzbeUPYbqEAb",
 		Cache:          cache.New(),
 	}
 	wxCpt    *crypto.WXBizMsgCrypt
@@ -77,6 +77,10 @@ func main() {
 
 	faas.RunTencentChiWithSwagger(r)
 }
+
+const (
+	WelcomeMsg = "您好，这里是宝贝回家公益组织，感谢您的关注和信任。您有寻人、申请志愿者、举报、提供线索、其他咨询等需求，请加宝贝回家唯一全国接待QQ群：1840533。接待群每天9:00-23:00提供咨询登记服务。温馨提示：“宝贝回家”是公益组织，提供的寻亲服务均是免费的，任何发生经济往来的都是假的，  请不要相信。"
+)
 
 // HandleCallback - recieve wxkf's notifies.
 // @Summary Query item.
@@ -133,7 +137,8 @@ func HandleCallback(w http.ResponseWriter, r *http.Request) {
 				},
 				MsgType: "text",
 			}
-			tMsg.Text.Content = "[开发中]欢迎语"
+			// tMsg.Text.Content = "[开发中]欢迎语"
+			tMsg.Text.Content = WelcomeMsg
 			sMsg = tMsg
 		default: // 默认回复
 			tMsg := &sendmsg.Text{
