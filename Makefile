@@ -3,7 +3,7 @@ SHELL = /bin/bash
 VERSION:=$(shell git describe --dirty --always)
 #VERSION := $(shell git describe --tags)
 BUILD := $(shell git rev-parse HEAD)
-REPO := github.com/airdb/ssl-chi
+REPO := github.com/airdb/wxwork-kf
 
 LDFLAGS=-ldflags
 LDFLAGS += "-X=github.com/airdb/sailor/version.Repo=$(REPO) \
