@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -8,6 +8,7 @@ import (
 
 	sdk "github.com/NICEXAI/WeChatCustomerServiceSDK"
 	"github.com/NICEXAI/WeChatCustomerServiceSDK/sendmsg"
+	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/stretchr/testify/assert"
 
 	_ "github.com/swaggo/http-swagger/example/go-chi/docs"
@@ -16,7 +17,7 @@ import (
 func Test_sendMsg(t *testing.T) {
 	file, _ := os.OpenFile("./static/727c801fe83ebe9.jpg", os.O_RDONLY, os.ModePerm)
 	fileStat, _ := file.Stat()
-	fileInfo, err := wxClient.MediaUpload(sdk.MediaUploadOptions{
+	fileInfo, err := app.WxClient.MediaUpload(sdk.MediaUploadOptions{
 		Type:     "file",
 		FileName: "girl.jpeg",
 		FileSize: fileStat.Size(),
@@ -39,12 +40,12 @@ func Test_sendMsg(t *testing.T) {
 
 	param, _ := json.Marshal(sMsg)
 	log.Println(string(param))
-	rMsg, err := wxClient.SendMsg(sMsg)
+	rMsg, err := app.WxClient.SendMsg(sMsg)
 	log.Println("result:", rMsg.MsgID, ", err:", err.Error())
 }
 
 func Test_callback(t *testing.T) {
-	info, _ := wxClient.SyncMsg(sdk.SyncMsgOptions{
+	info, _ := app.WxClient.SyncMsg(sdk.SyncMsgOptions{
 		Token: "ENC2rfaK4p7tJXDaeDuGZyqBxzvw4UZSEVHrqQUHrxLobrX",
 		Limit: 10,
 	})
@@ -55,18 +56,18 @@ func Test_callback(t *testing.T) {
 }
 
 func Test_main(t *testing.T) {
-	// list, err := wxClient.AccountList()
+	// list, err := app.WxClient.AccountList()
 	// assert.Nil(t, err)
 	// assert.NotNil(t, list)
 
-	// infoAdd, err := wxClient.AccountAdd(sdk.AccountAddOptions{
+	// infoAdd, err := app.WxClient.AccountAdd(sdk.AccountAddOptions{
 	// 	Name: "测试客服",
 	// 	// MediaID: "294DpAog3YA5b9rTK4PjjfRfYLO0L5qpDHAJIzhhQ2jAEWjb9i661Q4lk8oFnPtmj",
 	// })
 	// assert.Nil(t, err)
 	// assert.NotNil(t, infoAdd)
 
-	info, err := wxClient.AddContactWay(sdk.AddContactWayOptions{
+	info, err := app.WxClient.AddContactWay(sdk.AddContactWayOptions{
 		OpenKFID: "wk2C5gEQAAge69_zMhQgfSor6thQJ8og",
 		Scene:    "s-admin",
 	})
