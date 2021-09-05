@@ -2,8 +2,8 @@
 #应用组织信息
 org: 'orzlab' # 组织名称。留空则则使用默认值为用户appid
 app: 'wxwork' # 应用名称。留空则默认取当前组件的实例名称为app名称。
-#stage: 'test' # 环境名称。默认值是 dev。建议使用${env.STAGE}变量定义环境名称
-stage: ${env.STAGE} # 环境名称。默认值是 dev。建议使用${env.STAGE}变量定义环境名称
+#stage: 'test' # 环境名称。默认值是 dev。建议使用${env:STAGE}变量定义环境名称
+stage: ${env:STAGE} # 环境名称。默认值是 dev。建议使用${env:STAGE}变量定义环境名称
 
 component: scf
 name: wxkf
@@ -26,13 +26,13 @@ inputs:
     variables: #  环境变量对象
       ENV: ${stage}
       env: ${stage}
-      RedisAddr:  "10.0.1.194:3306"
-      RedisPasswd: "BBHJRedis"
-      RedisDB: 2
-      CorpID: "wx4aaa3fe59423b402" # baobeihuijia
-      Secret: "4yYkPAXPUQVO7Kid5E8cDtxCsiWpwYtfn1D5KRR2auM"
-      Token: "JMYUsGTy4dv0Kj9FAGjTa4"
-      EncodingAESKey: "inBMXo9lc5DgI6urpjE5eIBAfFoYtLVzzbeUPYbqEAb"
+      WXKF_REDIS_ADDR: ${env:WXKF_REDIS_ADDR}
+      WXKF_REDIS_PASSWD: ${env:WXKF_REDIS_PASSWD}
+      WXKF_REDIS_DB: ${env:WXKF_REDIS_DB}
+      WXKF_CORP_ID: ${env:WXKF_CORP_ID}
+      WXKF_SECRET: ${env:WXKF_SECRET}
+      WXKF_TOKEN: ${env:WXKF_TOKEN}
+      WXKF_ENCODING_AES_KEY: ${env:WXKF_ENCODING_AES_KEY}
 
   publicAccess: true # 是否开启公网访问
 
@@ -40,7 +40,7 @@ inputs:
     - apigw:
         parameters:
           serviceName: serverless
-          serviceId: service-iw6drlfr
+          serviceId: ${env:WXKF_SERVICE_ID}
           protocols:
             - http
             - https
