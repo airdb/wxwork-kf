@@ -24,7 +24,7 @@ func InitSdk() {
 
 	wxOption.CorpID = os.Getenv("WXKF_CORP_ID")
 	wxOption.Secret = os.Getenv("WXKF_SECRET")
-	wxOption.Token = os.Getenv("WXKF_SECRET")
+	wxOption.Token = os.Getenv("WXKF_TOKEN")
 	wxOption.EncodingAESKey = os.Getenv("WXKF_ENCODING_AES_KEY")
 
 	var wxRedisOption cache.RedisOptions
