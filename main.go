@@ -42,6 +42,7 @@ func main() {
 	r.Route("/wxkf", func(r chi.Router) {
 		r.Get("/version", faas.HandleVersion)
 		r.HandleFunc("/callback", handler.Callback)
+		r.Get("/account/list", handler.AccountList)
 	})
 
 	fmt.Println("hello", deployutil.GetDeployStage())

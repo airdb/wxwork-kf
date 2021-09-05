@@ -1,6 +1,6 @@
 # Ref: https://github.com/serverless-components/tencent-scf/blob/master/docs/configure.md.
 #应用组织信息
-org: 'orzlab' # 组织名称。留空则则使用默认值为用户appid
+org: '' # 组织名称。留空则则使用默认值为用户appid
 app: 'wxwork' # 应用名称。留空则默认取当前组件的实例名称为app名称。
 #stage: 'test' # 环境名称。默认值是 dev。建议使用${env:STAGE}变量定义环境名称
 stage: ${env:STAGE} # 环境名称。默认值是 dev。建议使用${env:STAGE}变量定义环境名称
