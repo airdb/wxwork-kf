@@ -10,8 +10,6 @@ import (
 	"github.com/NICEXAI/WeChatCustomerServiceSDK/sendmsg"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/stretchr/testify/assert"
-
-	_ "github.com/swaggo/http-swagger/example/go-chi/docs"
 )
 
 func Test_sendMsg(t *testing.T) {

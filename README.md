@@ -4,7 +4,7 @@
 
 1. 客服
 
-2. 用户
+2. 客户
 
 3. 专员
 
@@ -18,6 +18,9 @@
 - 正常访问外网
 
 ### 环境文件
+
+https://github.com/serverless/serverless-tencent/discussions/22
+https://github.com/serverless/serverless-tencent/blob/master/docs/basic/variables.md
 
 1. .env
 
@@ -62,3 +65,10 @@ $ make deploy
 ```bash
 $ make release
 ```
+
+## 常见问题
+
+### 错误 48002
+
+需要在 https://work.weixin.qq.com/wework_admin/frame#/app/servicer 页面的【通过API管理微信客服】进行配置后重新获取 Token.
+
