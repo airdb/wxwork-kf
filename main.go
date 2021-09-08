@@ -47,5 +47,5 @@ func main() {
 
 	fmt.Println("hello", deployutil.GetDeployStage())
 
-	faas.RunTencentChiWithSwagger(r)
+	faas.RunTencentChiWithSwagger(r, "wxkf")
 }

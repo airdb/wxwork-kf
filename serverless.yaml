@@ -33,6 +33,8 @@ inputs:
       WXKF_SECRET: ${env:WXKF_SECRET}
       WXKF_TOKEN: ${env:WXKF_TOKEN}
       WXKF_ENCODING_AES_KEY: ${env:WXKF_ENCODING_AES_KEY}
+      MAIN_DSN_WRITE: ${env:MAIN_DSN_WRITE}
+      MAIN_DSN_READ: ${env:MAIN_DSN_READ}
 
   publicAccess: true # 是否开启公网访问
 
