@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
 
 	"github.com/airdb/sailor/deployutil"
 	"github.com/airdb/sailor/faas"
@@ -33,6 +34,8 @@ import (
 // @host service-iw6drlfr-1251018873.sh.apigw.tencentcs.com
 // @BasePath /wxkf
 func main() {
+	log.Println("start serverless:", deployutil.GetDeployStage(), os.Environ())
+
 	app.InitSdk()
 
 	r := chi.NewRouter()
@@ -44,8 +47,6 @@ func main() {
 		r.HandleFunc("/callback", handler.Callback)
 		r.Get("/account/list", handler.AccountList)
 	})
-
-	fmt.Println("hello", deployutil.GetDeployStage())
 
 	faas.RunTencentChiWithSwagger(r, "wxkf")
 }

@@ -28,7 +28,7 @@ inputs:
 
   environments: #  环境变量
     - key: MAIN_DSN_READ2
-      value: ${output:${stage}:${app}:${name}.${env}}
+      value: ${output:${stage}:${app}:${name}.${ENV}}
   environment: #  环境变量
     variables: #  环境变量对象
       ENV: ${stage}
