@@ -1,4 +1,8 @@
-# Ref: https://github.com/serverless-components/tencent-scf/blob/master/docs/configure.md.
+# Ref:
+# https://github.com/serverless-components/tencent-scf/blob/master/docs/configure.md.
+# https://github.com/serverless/serverless-tencent/discussions/22
+# https://github.com/serverless/serverless-tencent/blob/master/docs/basic/variables.md
+#
 #应用组织信息
 org: '' # 组织名称。留空则则使用默认值为用户appid
 app: 'wxwork' # 应用名称。留空则默认取当前组件的实例名称为app名称。
@@ -22,6 +26,9 @@ inputs:
   timeout: 5 # 函数执行超时时间，单位秒
   initTimeout: 3 # 初始化超时时间，单位秒
 
+  environments: #  环境变量
+    - key: MAIN_DSN_READ2
+      value: ${output:${stage}:${app}:${name}.${env}}
   environment: #  环境变量
     variables: #  环境变量对象
       ENV: ${stage}

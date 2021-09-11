@@ -19,6 +19,9 @@
 
 ### 环境文件
 
+https://github.com/serverless/serverless-tencent/discussions/22
+https://github.com/serverless/serverless-tencent/blob/master/docs/basic/variables.md
+
 1. .env
 
 serverless 登录腾讯云的凭据配置，以及针对 serverless 部署到腾讯云必要环境变量(SERVERLESS_PLATFORM_VENDOR=tencent)配置。
