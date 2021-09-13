@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"encoding/xml"
+	"fmt"
 	"github.com/airdb/wxwork-kf/pkg/po"
 	"io"
 	"log"
@@ -105,6 +106,7 @@ func procUserMsg(ctx context.Context, msg syncmsg.Message) {
 		toUser            string
 	)
 
+	fmt.Println("msg.MsgType :", msg.MsgType)
 	switch msg.MsgType {
 	case WxMsgTypeText:
 		tMsg, _ := msg.GetTextMessage()

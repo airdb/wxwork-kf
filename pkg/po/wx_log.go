@@ -33,6 +33,6 @@ func (u *WxKfLog) BeforeSave(tx *gorm.DB) (err error) {
 
 
 func WxKfLogSave(data *WxKfLog) error{
-	fmt.Println(data)
+	fmt.Println("WxKF Log data:",data)
 	return dbutil.WriteDefaultDB().Debug().Create(data).Error
 }
