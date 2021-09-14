@@ -4,23 +4,15 @@ import (
 	"log"
 	"strings"
 
-	sdk "github.com/NICEXAI/WeChatCustomerServiceSDK"
-	"github.com/NICEXAI/WeChatCustomerServiceSDK/sendmsg"
 	"github.com/NICEXAI/WeChatCustomerServiceSDK/syncmsg"
 	"github.com/airdb/wxwork-kf/internal/app"
+	"github.com/airdb/wxwork-kf/internal/types"
+	"github.com/airdb/wxwork-kf/pkg/util"
 )
 
 const (
 	WelcomeMsg = "您好，这里是宝贝回家公益组织，感谢您的关注和信任。您有寻人、申请志愿者、举报、提供线索、其他咨询等需求，请加宝贝回家唯一全国接待QQ群：1840533。接待群每天9:00-23:00提供咨询登记服务。温馨提示：“宝贝回家”是公益组织，提供的寻亲服务均是免费的，任何发生经济往来的都是假的，请不要相信。"
 	DefaultMsg = "回复“帮助”查看更多内容"
-
-	// wx message type
-	WxMsgTypeText     = "text"
-	WxMsgTypeImg      = "image"
-	WxMsgTypeVideo    = "video"
-	WxMsgTypeVoice    = "voice"
-	WxMsgTypeFile     = "file"
-	WxMsgTypeLocation = "location"
 )
 
 // 消息匹配方式
@@ -48,49 +40,36 @@ const (
 )
 
 // 填充式消息
-type ReplyCallback func(mh sendmsg.Message) interface{}
+type ReplyCallback func(mr *types.ReplayMessage) error
 
 var (
 	// TplReplys 根据用户消息内容，返回对话内容
 	TplReplys = &ReplyTpls{
 		{"text", MatchMethodFull, "default", ReplyTypeText, WelcomeMsg},
-		{"text", MatchMethodFull, "帮助", ReplyTypeMenu, ReplyCallback(func(mh sendmsg.Message) interface{} {
-			msg := sendmsg.Menu{
-				Message: mh,
-				MsgType: "msgmenu",
-			}
-			msg.MsgMenu.HeadContent = WelcomeMsg
-			msg.MsgMenu.List = []interface{}{
-				map[string]interface{}{
-					"type": "click",
-					"click": map[string]string{
-						"id":      "welcome",
-						"content": "欢迎语",
+		{"text", MatchMethodFull, "帮助", ReplyTypeMenu, ReplyCallback(func(mr *types.ReplayMessage) error {
+			cm := types.ContentMenu{
+				HeadContent: WelcomeMsg,
+				List: []interface{}{
+					map[string]interface{}{
+						"type":  "click",
+						"click": map[string]string{"id": "welcome", "content": "欢迎语"},
 					},
-				},
-				map[string]interface{}{
-					"type": "click",
-					"click": map[string]string{
-						"id":      "search",
-						"content": "寻人",
+					map[string]interface{}{
+						"type":  "click",
+						"click": map[string]string{"id": "search", "content": "寻人"},
 					},
-				},
-				map[string]interface{}{
-					"type": "click",
-					"click": map[string]string{
-						"id":      "clue",
-						"content": "线索",
+					map[string]interface{}{
+						"type":  "click",
+						"click": map[string]string{"id": "clue", "content": "线索"},
 					},
-				},
-				map[string]interface{}{
-					"type": "click",
-					"click": map[string]string{
-						"id":      "volunteer",
-						"content": "志愿者",
+					map[string]interface{}{
+						"type":  "click",
+						"click": map[string]string{"id": "volunteer", "content": "志愿者"},
 					},
 				},
 			}
-			return msg
+			mr.SetMenu(cm)
+			return nil
 		})},
 		{"text", MatchMethodFull, "寻人", ReplyTypeText, "[寻人](在这里输入你能提供的信息)"},
 		{"text", MatchMethodFull, "线索", ReplyTypeText, "[线索](在这里输入你能提供的线索)"},
@@ -116,20 +95,18 @@ type ReplyTpl struct {
 }
 
 // Gen 组装消息
-func (rt ReplyTpl) Gen(toUser, openKFID, msgID string) interface{} {
-	msgHead := sendmsg.Message{ToUser: toUser, OpenKFID: openKFID, MsgID: msgID}
+func (rt ReplyTpl) Gen(toUser, openKFID string) *types.ReplayMessage {
+	ret := types.NewReplayMessage(toUser, openKFID, util.RandString(32))
 
-	var ret interface{}
 	switch rt.ReplyType {
 	case ReplyTypeText: // 文本消息
-		fallthrough
+		ret.SetText(rt.Message.(string))
 	case ReplyTypeImage: // 图片消息
-		textMsg := &sendmsg.Text{Message: msgHead, MsgType: "text"}
-		textMsg.Text.Content = rt.Message.(string)
-		ret = textMsg
+		ret.SetImage(rt.Message.(string))
 	case ReplyTypeMenu: // 菜单消息
-		if callback, ok := rt.Message.(ReplyCallback); ok {
-			ret = callback(msgHead)
+		callback, ok := rt.Message.(ReplyCallback)
+		if ok {
+			callback(ret)
 		}
 	case ReplyTypeActionTrans:
 		// 查找客服账号列表
@@ -146,14 +123,7 @@ func (rt ReplyTpl) Gen(toUser, openKFID, msgID string) interface{} {
 		}
 		receptionis := receptionisList.ReceptionistList[0]
 
-		// 拼接返回内容
-		transMsg := sdk.ServiceStateTransOptions{
-			OpenKFID:       openKFID,
-			ExternalUserID: toUser,
-			ServiceState:   3,
-			ServicerUserID: receptionis.UserID,
-		}
-		ret = transMsg
+		ret.SetActionTrans(3, receptionis.UserID)
 	}
 
 	return ret
@@ -162,20 +132,20 @@ func (rt ReplyTpl) Gen(toUser, openKFID, msgID string) interface{} {
 // Match 根据不同的消息类型选择不同的匹配方式
 func (rt ReplyTpl) Match(msg syncmsg.Message) bool {
 	switch msg.MsgType {
-	case WxMsgTypeText:
+	case types.WxMsgTypeText:
 		if info, err := msg.GetTextMessage(); err == nil {
 			return rt.matchText(info.Text.Content)
 		}
 		return false
-	case WxMsgTypeImg: // 图片
+	case types.WxMsgTypeImg: // 图片
 		return true
-	case WxMsgTypeVideo: // 视频
+	case types.WxMsgTypeVideo: // 视频
 		return true
-	case WxMsgTypeVoice: // 语音
+	case types.WxMsgTypeVoice: // 语音
 		return true
-	case WxMsgTypeFile: // 文件
+	case types.WxMsgTypeFile: // 文件
 		return true
-	case WxMsgTypeLocation: // 位置
+	case types.WxMsgTypeLocation: // 位置
 		return true
 	default: // 默认回复
 		log.Fatalf("unknown user msg type: %s", msg.MsgType)

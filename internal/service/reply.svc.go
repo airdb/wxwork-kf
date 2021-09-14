@@ -11,6 +11,7 @@ import (
 	"github.com/NICEXAI/WeChatCustomerServiceSDK/sendmsg"
 	"github.com/NICEXAI/WeChatCustomerServiceSDK/syncmsg"
 	"github.com/airdb/wxwork-kf/internal/app"
+	"github.com/airdb/wxwork-kf/internal/types"
 	"github.com/airdb/wxwork-kf/pkg/po"
 	"github.com/airdb/wxwork-kf/pkg/util"
 )
@@ -24,10 +25,12 @@ func NewReply() *Reply {
 // ProcMsg 处理单条消息, 并按消息来源颁发给不同的处理过程
 func (s Reply) ProcMsg(ctx context.Context, msg syncmsg.Message) {
 	switch msg.Origin {
-	case 3: //客户回复的消息
+	case 3: // 客户回复的消息
 		s.userMsg(ctx, msg)
-	case 4: //系统推送的消息
+	case 4: // 系统推送的消息
 		s.systemMsg(ctx, msg)
+	case 5: // 接待人员在企业微信客户端发送的消息
+		s.receptionistMsg(ctx, msg)
 	default:
 		log.Fatalf("unknown msg origin: %d", msg.Origin)
 	}
@@ -50,9 +53,15 @@ func (s Reply) userMsg(ctx context.Context, msg syncmsg.Message) {
 	}
 
 	var (
-		ret          = rTpl.Gen(msg.ExternalUserID, msg.OpenKFID, util.RandString(32))
+		msgResp      = rTpl.Gen(msg.ExternalUserID, msg.OpenKFID)
 		hasMsgSendOk bool // 消息执行是否成功
 	)
+
+	ret, err := msgResp.Assume()
+	if err != nil {
+		log.Fatalf("can not assume msg: %s", err.Error())
+		return
+	}
 
 	switch rTpl.ReplyType {
 	case ReplyTypeText, ReplyTypeImage, ReplyTypeMenu:
@@ -62,7 +71,7 @@ func (s Reply) userMsg(ctx context.Context, msg syncmsg.Message) {
 	}
 
 	if hasMsgSendOk {
-		s.saveMsg()
+		s.saveMsg(msgResp)
 	}
 }
 
@@ -113,6 +122,11 @@ func (s Reply) systemMsg(ctx context.Context, msg syncmsg.Message) {
 	}
 }
 
+// 处理客服消息, 只需用入库
+func (s Reply) receptionistMsg(ctx context.Context, msg syncmsg.Message) {
+	s.saveMsg(msg)
+}
+
 // 发送消息
 func (s Reply) sendMsg(msg syncmsg.Message, ret interface{}) bool {
 	if info, err := app.WxClient.SendMsg(ret); err == nil {
@@ -143,20 +157,28 @@ func (s Reply) transMsg(msg syncmsg.Message, ret interface{}) bool {
 }
 
 // 执行消息持久化
-func (s Reply) saveMsg() {
-	var (
-		userInput         string
-		wxResponseContent string
-		wxMessageId       string
-		wxOpenKFID        string
-		toUser            string
-	)
+// TODO: 根据消息内容执行不同的持久化方式
+func (s Reply) saveMsg(msg interface{}) {
+	var payload *po.WxKfLog
 
-	logData := new(po.WxKfLog)
-	logData.MsgID = wxMessageId
-	logData.OpenKFID = wxOpenKFID
-	logData.ToUserID = toUser
-	logData.Input = userInput
-	logData.Response = wxResponseContent
-	po.WxKfLogSave(logData)
+	switch m := msg.(type) {
+	case *types.ReplayMessage: // 返回的消息
+		payload = &po.WxKfLog{
+			MsgID:    m.MsgID,
+			OpenKFID: m.OpenKFID,
+			ToUserID: m.ToUser,
+		}
+	case *syncmsg.Message: // 同步到的消息
+		payload = &po.WxKfLog{
+			MsgID:    m.MsgID,
+			OpenKFID: m.OpenKFID,
+			ToUserID: m.ExternalUserID,
+		}
+	default:
+		log.Fatalf("save unknown msg %v", msg)
+	}
+
+	if payload != nil {
+		po.WxKfLogSave(payload)
+	}
 }
