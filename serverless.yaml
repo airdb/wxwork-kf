@@ -18,7 +18,10 @@ inputs:
     hook: "ls"
     exclude:
       - .env
+      - .env.test
+      - .env.release
       - .vscode
+  namespace: ${env:WXKF_NAMESPACE}
   region: ap-shanghai
   runtime: Go1
   handler: main
