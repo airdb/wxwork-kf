@@ -22,6 +22,7 @@ const (
 	MatchMethodFull     MatchMethod = iota // 匹配全文
 	MatchMethodKeyword                     // 匹配关键字
 	MatchMethodPrefix                      // 匹配前缀
+	MatchMethodRegexp                      // 正则匹配
 	MatchMethodImg                         // 匹配图片
 	MatchMethodVideo                       // 匹配视频
 	MatchMethodVoice                       // 匹配音频
@@ -73,7 +74,7 @@ var (
 		})},
 		{"text", MatchMethodFull, "寻人", ReplyTypeText, "[寻人](在这里输入你能提供的信息)"},
 		{"text", MatchMethodFull, "线索", ReplyTypeText, "[线索](在这里输入你能提供的线索)"},
-		{"text", MatchMethodPrefix, "[寻人]", ReplyTypeActionTrans, ""},
+		{"text", MatchMethodFull, "人工客服", ReplyTypeActionTrans, ""},
 		{"text", MatchMethodPrefix, "[线索]", ReplyTypeActionTrans, ""},
 		{"text", MatchMethodPrefix, "[志愿者]", ReplyTypeImage, "图片ID"},
 		// TODO
