@@ -11,15 +11,18 @@ import (
 	"github.com/NICEXAI/WeChatCustomerServiceSDK/sendmsg"
 	"github.com/NICEXAI/WeChatCustomerServiceSDK/syncmsg"
 	"github.com/airdb/wxwork-kf/internal/app"
+	"github.com/airdb/wxwork-kf/internal/store"
 	"github.com/airdb/wxwork-kf/internal/types"
 	"github.com/airdb/wxwork-kf/pkg/po"
 	"github.com/airdb/wxwork-kf/pkg/util"
 )
 
-type Reply struct{}
+type Reply struct {
+	store store.Factory // TODO
+}
 
-func NewReply() *Reply {
-	return &Reply{}
+func NewReply(store store.Factory) *Reply {
+	return &Reply{store}
 }
 
 // ProcMsg 处理单条消息, 并按消息来源颁发给不同的处理过程

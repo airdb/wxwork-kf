@@ -9,6 +9,7 @@ import (
 	sdk "github.com/NICEXAI/WeChatCustomerServiceSDK"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/airdb/wxwork-kf/internal/service"
+	"github.com/airdb/wxwork-kf/internal/store/mysql"
 )
 
 // Callback - recieve wxkf's notifies.
@@ -56,9 +57,16 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 		app.Redis.Set(ctx, app.SyncMsgNextCursor, syncMsg.NextCursor, 0)
 	}
 
-	replayRvc := service.NewReply()
+	mysqlStore, err := mysql.GetFactoryOr(nil) // TODO
+	if err == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(nil)
+		return
+	}
+
+	replySvc := service.NewReply(mysqlStore)
 	for _, msg := range syncMsg.MsgList {
-		replayRvc.ProcMsg(ctx, msg)
+		replySvc.ProcMsg(ctx, msg)
 	}
 
 	w.WriteHeader(http.StatusOK)
