@@ -27,7 +27,7 @@ func TestReply_ProcMsg(t *testing.T) {
 		// 	MsgType:    "text",
 		// 	OriginData: generateTextData("[寻人]"),
 		// }}},
-		{"menu msg", NewReply(), args{context.Background(), syncmsg.Message{
+		{"menu msg", NewReply(nil), args{context.Background(), syncmsg.Message{
 			Origin:     3,
 			MsgType:    "text",
 			OriginData: generateTextData("帮助"),
