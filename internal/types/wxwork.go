@@ -8,4 +8,7 @@ var (
 	WxMsgTypeVoice    = "voice"
 	WxMsgTypeFile     = "file"
 	WxMsgTypeLocation = "location"
+	// 仅供返回消息
+	WxMsgTypeMenu        = "msgmenu"
+	WxMsgTypeActionTrans = "actionTrans"
 )
