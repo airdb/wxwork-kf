@@ -41,13 +41,13 @@ const (
 )
 
 // 填充式消息
-type ReplyCallback func(mr *types.ReplayMessage) error
+type ReplyCallback func(mr *types.ReplyMessage) error
 
 var (
 	// TplReplys 根据用户消息内容，返回对话内容
 	TplReplys = &ReplyTpls{
 		{"text", MatchMethodFull, "default", ReplyTypeText, WelcomeMsg},
-		{"text", MatchMethodFull, "帮助", ReplyTypeMenu, ReplyCallback(func(mr *types.ReplayMessage) error {
+		{"text", MatchMethodFull, "帮助", ReplyTypeMenu, ReplyCallback(func(mr *types.ReplyMessage) error {
 			cm := types.ContentMenu{
 				HeadContent: WelcomeMsg,
 				List: []interface{}{
@@ -96,8 +96,8 @@ type ReplyTpl struct {
 }
 
 // Gen 组装消息
-func (rt ReplyTpl) Gen(toUser, openKFID string) *types.ReplayMessage {
-	ret := types.NewReplayMessage(toUser, openKFID, util.RandString(32))
+func (rt ReplyTpl) Gen(toUser, openKFID string) *types.ReplyMessage {
+	ret := types.NewReplyMessage(toUser, openKFID, util.RandString(32))
 
 	switch rt.ReplyType {
 	case ReplyTypeText: // 文本消息

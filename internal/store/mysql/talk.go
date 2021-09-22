@@ -19,3 +19,19 @@ func newTalks(ds *datastore) *talks {
 func (u *talks) Create(ctx context.Context, talk *schema.Talk) error {
 	return u.db.Create(&talk).Error
 }
+
+// FirstOrCreate find first talk by kfid and userid.
+func (u *talks) FirstOrCreate(ctx context.Context, openKFID, toUserID string) (*schema.Talk, error) {
+	talk := schema.Talk{
+		OpenKFID: openKFID,
+		ToUserID: toUserID,
+	}
+	if err := u.db.Where(&talk).First(&talk).Error; err == nil {
+		return &talk, nil
+	}
+	if err := u.db.Create(&talk).Error; err == nil {
+		return &talk, nil
+	} else {
+		return nil, err
+	}
+}

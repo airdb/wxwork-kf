@@ -13,7 +13,7 @@ import (
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/airdb/wxwork-kf/internal/store"
 	"github.com/airdb/wxwork-kf/internal/types"
-	"github.com/airdb/wxwork-kf/pkg/po"
+	"github.com/airdb/wxwork-kf/pkg/schema"
 	"github.com/airdb/wxwork-kf/pkg/util"
 )
 
@@ -74,7 +74,7 @@ func (s Reply) userMsg(ctx context.Context, msg syncmsg.Message) {
 	}
 
 	if hasMsgSendOk {
-		s.saveMsg(msgResp)
+		s.saveMsg(ctx, msgResp)
 	}
 }
 
@@ -127,7 +127,7 @@ func (s Reply) systemMsg(ctx context.Context, msg syncmsg.Message) {
 
 // 处理客服消息, 只需用入库
 func (s Reply) receptionistMsg(ctx context.Context, msg syncmsg.Message) {
-	s.saveMsg(msg)
+	s.saveMsg(ctx, msg)
 }
 
 // 发送消息
@@ -161,27 +161,49 @@ func (s Reply) transMsg(msg syncmsg.Message, ret interface{}) bool {
 
 // 执行消息持久化
 // TODO: 根据消息内容执行不同的持久化方式
-func (s Reply) saveMsg(msg interface{}) {
-	var payload *po.WxKfLog
+func (s Reply) saveMsg(ctx context.Context, data interface{}) {
+	var (
+		talk *schema.Talk
+		msg  *schema.Message
+	)
 
-	switch m := msg.(type) {
-	case *types.ReplayMessage: // 返回的消息
-		payload = &po.WxKfLog{
-			MsgID:    m.MsgID,
+	switch m := data.(type) {
+	case *types.ReplyMessage: // 返回的消息
+		talk = &schema.Talk{
 			OpenKFID: m.OpenKFID,
 			ToUserID: m.ToUser,
 		}
+		msg = &schema.Message{
+			MsgFrom:  "bot",
+			Origin:   0,
+			Msgid:    m.MsgID,
+			Msgtype:  m.ReplyType,
+			SendTime: time.Now(),
+			Content:  m.ContentImage,
+		}
 	case *syncmsg.Message: // 同步到的消息
-		payload = &po.WxKfLog{
-			MsgID:    m.MsgID,
+		talk = &schema.Talk{
 			OpenKFID: m.OpenKFID,
 			ToUserID: m.ExternalUserID,
 		}
+		msg = &schema.Message{
+			MsgFrom:  "sync",
+			Origin:   m.Origin,
+			Msgid:    m.MsgID,
+			Msgtype:  m.MsgType,
+			SendTime: time.Unix(int64(m.SendTime), 0),
+			Content:  string(m.GetOriginMessage()),
+		}
 	default:
-		log.Fatalf("save unknown msg %v", msg)
+		log.Fatalf("save unknown data %v", data)
 	}
 
-	if payload != nil {
-		po.WxKfLogSave(payload)
+	talk, err := s.store.Talks().FirstOrCreate(ctx, talk.OpenKFID, talk.ToUserID)
+	if err != nil {
+		return
 	}
+	msg.TalkID = talk.ID
+
+	// TODO 保存消息
+	// s.store.Talks().Create(ctx, msg)
 }
