@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	sdk "github.com/NICEXAI/WeChatCustomerServiceSDK"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/go-chi/render"
+	"github.com/silenceper/wechat/v2/work/kf"
 )
 
 // KfList - 按场景获取客服列表.
@@ -18,10 +18,10 @@ import (
 // @Success 200 {string} response "api response"
 // @Router /account/list [get]
 func AccountList(w http.ResponseWriter, r *http.Request) {
-	list, err := app.WxClient.AccountList()
+	list, err := app.WxWorkKF.AccountList()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		render.JSON(w, r, list.BaseModel)
+		render.JSON(w, r, list.CommonError)
 	}
 
 	scene := r.URL.Query().Get("scene")
@@ -31,7 +31,7 @@ func AccountList(w http.ResponseWriter, r *http.Request) {
 
 	retList := make([]map[string]string, 0)
 	for _, item := range list.AccountList {
-		info, err := app.WxClient.AddContactWay(sdk.AddContactWayOptions{
+		info, err := app.WxWorkKF.AddContactWay(kf.AddContactWayOptions{
 			OpenKFID: item.OpenKFID,
 			Scene:    scene,
 		})

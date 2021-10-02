@@ -6,10 +6,10 @@ import (
 	"log"
 	"strings"
 
-	"github.com/NICEXAI/WeChatCustomerServiceSDK/syncmsg"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/airdb/wxwork-kf/internal/types"
 	"github.com/airdb/wxwork-kf/pkg/util"
+	"github.com/silenceper/wechat/v2/work/kf/syncmsg"
 )
 
 const (
@@ -79,6 +79,8 @@ var (
 		{"text", MatchMethodFull, "志愿者", ReplyTypeImage, strings.Join([]string{
 			app.InviteImagePrefix, "志愿者",
 		}, ":")},
+		{"text", MatchMethodFull, "[寻人]", ReplyTypeActionTrans, ""},
+		{"text", MatchMethodFull, "[线索]", ReplyTypeActionTrans, ""},
 		{"text", MatchMethodFull, "人工客服", ReplyTypeActionTrans, ""},
 		// TODO
 		{"image", MatchMethodImg, "【图片消息】", ReplyTypeText, "【图片消息】"},
@@ -127,14 +129,14 @@ func (rt ReplyTpl) Gen(toUser, openKFID string) *types.ReplyMessage {
 		}
 	case ReplyTypeActionTrans:
 		// 查找客服账号列表
-		accountList, err := app.WxClient.AccountList()
+		accountList, err := app.WxWorkKF.AccountList()
 		if err != nil || len(accountList.AccountList) == 0 {
 			return nil
 		}
 		account := accountList.AccountList[0]
 
 		// 接待人员列表
-		receptionisList, err := app.WxClient.ReceptionistList(account.OpenKFID)
+		receptionisList, err := app.WxWorkKF.ReceptionistList(account.OpenKFID)
 		if err != nil || len(receptionisList.ReceptionistList) == 0 {
 			return nil
 		}

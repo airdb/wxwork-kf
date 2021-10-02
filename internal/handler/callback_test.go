@@ -2,13 +2,16 @@ package handler
 
 import (
 	"encoding/json"
+	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"testing"
 
-	sdk "github.com/NICEXAI/WeChatCustomerServiceSDK"
-	"github.com/NICEXAI/WeChatCustomerServiceSDK/sendmsg"
 	"github.com/airdb/wxwork-kf/internal/app"
+	"github.com/silenceper/wechat/v2/officialaccount/material"
+	"github.com/silenceper/wechat/v2/work/kf"
+	"github.com/silenceper/wechat/v2/work/kf/sendmsg"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,21 +30,20 @@ func Test_sendMsg(t *testing.T) {
 
 	param, _ := json.Marshal(sMsg)
 	log.Println(string(param))
-	rMsg, err := app.WxClient.SendMsg(sMsg)
+	rMsg, err := app.WxWorkKF.SendMsg(sMsg)
 	log.Println("result:", rMsg.MsgID, ", err:", err.Error())
 }
 
 func Test_sendMsgImage(t *testing.T) {
-	app.InitSdk()
+	app.InitWxWork()
 
 	file, _ := os.OpenFile("../../.vscode/tmp/727c801fe83ebe9.jpg", os.O_RDONLY, os.ModePerm)
-	fileStat, _ := file.Stat()
-	fileInfo, err := app.WxClient.MediaUpload(sdk.MediaUploadOptions{
-		Type:     "image",
-		FileName: "girl.jpeg",
-		FileSize: fileStat.Size(),
-		File:     file,
-	})
+	tmpFile, _ := ioutil.TempFile("", "tmp")
+
+	io.Copy(tmpFile, file)
+	tmpFile.Sync()
+
+	fileInfo, err := app.WxWorkMedia.MediaUpload(material.MediaTypeImage, tmpFile.Name())
 	assert.Nil(t, err)
 	log.Println(fileInfo.MediaID)
 
@@ -57,12 +59,12 @@ func Test_sendMsgImage(t *testing.T) {
 
 	param, _ := json.Marshal(sMsg)
 	log.Println(string(param))
-	rMsg, err := app.WxClient.SendMsg(sMsg)
+	rMsg, err := app.WxWorkKF.SendMsg(sMsg)
 	log.Println("result:", rMsg.MsgID, ", err:", err.Error())
 }
 
 func Test_callback(t *testing.T) {
-	info, _ := app.WxClient.SyncMsg(sdk.SyncMsgOptions{
+	info, _ := app.WxWorkKF.SyncMsg(kf.SyncMsgOptions{
 		Token: "ENC2rfaK4p7tJXDaeDuGZyqBxzvw4UZSEVHrqQUHrxLobrX",
 		Limit: 10,
 	})
@@ -73,18 +75,18 @@ func Test_callback(t *testing.T) {
 }
 
 func Test_main(t *testing.T) {
-	// list, err := app.WxClient.AccountList()
+	// list, err := app.WxWorkKF.AccountList()
 	// assert.Nil(t, err)
 	// assert.NotNil(t, list)
 
-	// infoAdd, err := app.WxClient.AccountAdd(sdk.AccountAddOptions{
+	// infoAdd, err := app.WxWorkKF.AccountAdd(sdk.AccountAddOptions{
 	// 	Name: "测试客服",
 	// 	// MediaID: "294DpAog3YA5b9rTK4PjjfRfYLO0L5qpDHAJIzhhQ2jAEWjb9i661Q4lk8oFnPtmj",
 	// })
 	// assert.Nil(t, err)
 	// assert.NotNil(t, infoAdd)
 
-	info, err := app.WxClient.AddContactWay(sdk.AddContactWayOptions{
+	info, err := app.WxWorkKF.AddContactWay(kf.AddContactWayOptions{
 		OpenKFID: "wk2C5gEQAAge69_zMhQgfSor6thQJ8og",
 		Scene:    "s-admin",
 	})

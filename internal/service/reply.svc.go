@@ -7,14 +7,14 @@ import (
 	"strings"
 	"time"
 
-	sdk "github.com/NICEXAI/WeChatCustomerServiceSDK"
-	"github.com/NICEXAI/WeChatCustomerServiceSDK/sendmsg"
-	"github.com/NICEXAI/WeChatCustomerServiceSDK/syncmsg"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/airdb/wxwork-kf/internal/store"
 	"github.com/airdb/wxwork-kf/internal/types"
 	"github.com/airdb/wxwork-kf/pkg/schema"
 	"github.com/airdb/wxwork-kf/pkg/util"
+	"github.com/silenceper/wechat/v2/work/kf"
+	"github.com/silenceper/wechat/v2/work/kf/sendmsg"
+	"github.com/silenceper/wechat/v2/work/kf/syncmsg"
 )
 
 type Reply struct {
@@ -132,7 +132,7 @@ func (s Reply) receptionistMsg(ctx context.Context, msg syncmsg.Message) {
 
 // 发送消息
 func (s Reply) sendMsg(msg syncmsg.Message, ret interface{}) bool {
-	if info, err := app.WxClient.SendMsg(ret); err == nil {
+	if info, err := app.WxWorkKF.SendMsg(ret); err == nil {
 		params, _ := json.Marshal(ret)
 		log.Println("result:", msg.EventType, info.MsgID, ", msg:", string(params))
 
@@ -146,11 +146,11 @@ func (s Reply) sendMsg(msg syncmsg.Message, ret interface{}) bool {
 
 // 分配客服会话
 func (s Reply) transMsg(msg syncmsg.Message, ret interface{}) bool {
-	transMsg, ok := ret.(sdk.ServiceStateTransOptions)
+	transMsg, ok := ret.(kf.ServiceStateTransOptions)
 	if !ok {
 		return false
 	}
-	transInfo, err := app.WxClient.ServiceStateTrans(transMsg)
+	transInfo, err := app.WxWorkKF.ServiceStateTrans(transMsg)
 	if err != nil {
 		log.Fatalf("trans msg err(%d): %s", transInfo.ErrCode, transInfo.ErrMsg)
 		return false

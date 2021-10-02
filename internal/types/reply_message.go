@@ -3,8 +3,8 @@ package types
 import (
 	"encoding/json"
 
-	sdk "github.com/NICEXAI/WeChatCustomerServiceSDK"
-	"github.com/NICEXAI/WeChatCustomerServiceSDK/sendmsg"
+	"github.com/silenceper/wechat/v2/work/kf"
+	"github.com/silenceper/wechat/v2/work/kf/sendmsg"
 )
 
 type ContentMenu struct {
@@ -83,7 +83,7 @@ func (m *ReplyMessage) SetActionTrans(state int, servicer string) {
 	m.ActionTransState = state
 	m.ActionTransServicer = servicer
 
-	msg := sdk.ServiceStateTransOptions{
+	msg := kf.ServiceStateTransOptions{
 		OpenKFID:       m.OpenKFID,
 		ExternalUserID: m.ToUser,
 		ServiceState:   m.ActionTransState,
