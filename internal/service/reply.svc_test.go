@@ -5,16 +5,16 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/NICEXAI/WeChatCustomerServiceSDK/syncmsg"
 	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/airdb/wxwork-kf/internal/store/mysql"
 	"github.com/airdb/wxwork-kf/internal/types"
 	"github.com/airdb/wxwork-kf/pkg/schema"
+	"github.com/silenceper/wechat/v2/work/kf/syncmsg"
 )
 
 func TestReply_ProcMsg(t *testing.T) {
-	app.InitSdk()
+	app.InitWxWork()
 
 	type args struct {
 		ctx context.Context

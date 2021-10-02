@@ -3,7 +3,6 @@ module github.com/airdb/wxwork-kf
 go 1.17
 
 require (
-	github.com/NICEXAI/WeChatCustomerServiceSDK v0.2.1
 	github.com/airdb/sailor v0.0.0-20210905152253-99ba97e2e89a
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/asmcos/requests v0.0.0-20210319030608-c839e8ae4946
@@ -49,6 +48,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/serverless-plus/tencent-serverless-go v1.0.1 // indirect
+	github.com/silenceper/wechat/v2 v2.0.9
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/net v0.0.0-20210908191846-a5e095526f91 // indirect
@@ -59,4 +59,9 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	gorm.io/driver/mysql v1.1.2
+)
+
+require (
+	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b // indirect
+	github.com/gomodule/redigo v2.0.0+incompatible // indirect
 )

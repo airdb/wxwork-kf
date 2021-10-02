@@ -36,18 +36,19 @@ import (
 func main() {
 	log.Println("start serverless:", deployutil.GetDeployStage(), os.Environ())
 
-	app.InitSdk()
+	app.InitWxWork()
 
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Use(render.SetContentType(render.ContentTypeHTML))
+	mux := chi.NewRouter()
+	mux.Use(middleware.Logger)
+	mux.Use(render.SetContentType(render.ContentTypeHTML))
 
-	r.Route("/wxkf", func(r chi.Router) {
+	mux.Route("/wxkf", func(r chi.Router) {
 		r.Get("/version", faas.HandleVersion)
 		r.HandleFunc("/callback", handler.Callback)
 		r.Get("/account/list", handler.AccountList)
 		r.Put("/invite/image/{usedBy}", handler.InviteImageUpload)
 	})
 
-	faas.RunTencentChiWithSwagger(r, "wxkf")
+	// http.ListenAndServe(":3333", mux)
+	faas.RunTencentChiWithSwagger(mux, "wxkf")
 }

@@ -5,12 +5,13 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
-	sdk "github.com/NICEXAI/WeChatCustomerServiceSDK"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/go-chi/chi/v5"
+	"github.com/silenceper/wechat/v2/officialaccount/material"
 )
 
 // InviteImageUpload - 上传邀请图片.
@@ -41,28 +42,32 @@ func InviteImageUpload(w http.ResponseWriter, r *http.Request) {
 		app.InviteImagePrefix, usedBy,
 	}, ":")
 
-	fd, fileHeader, err := r.FormFile("img")
+	// 解 base64 后保存在临时文件中上传
+	fd, _, err := r.FormFile("img")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(fmt.Sprintf("can not find image: %s", err.Error())))
 		return
 	}
-	fileContent, _ := io.ReadAll(fd)
-	base64.StdEncoding.Decode(fileContent, fileContent)
-
-	fileInfo, err := app.WxClient.MediaUpload(sdk.MediaUploadOptions{
-		Type:     "image",
-		FileName: fileHeader.Filename,
-		FileSize: fileHeader.Size,
-		File:     bytes.NewReader(fileContent),
-	})
+	fileBase64, _ := io.ReadAll(fd)
+	fileContent := make([]byte, base64.StdEncoding.DecodedLen(len(fileBase64)))
+	n, err := base64.StdEncoding.Decode(fileContent, fileBase64)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fileBase64 := []byte{}
-		base64.StdEncoding.Encode(fileContent, fileBase64)
+		w.Write([]byte(fmt.Sprintf("can not decode image(%d): %s", n, err.Error())))
+		return
+	}
+	tmpFile, _ := ioutil.TempFile("", "tmp")
+	io.Copy(tmpFile, bytes.NewBuffer(fileContent))
+	tmpFile.Sync()
+	tmpStat, _ := tmpFile.Stat()
+
+	fileInfo, err := app.WxWorkMedia.MediaUpload(material.MediaTypeImage, tmpFile.Name())
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(fmt.Sprintf(
-			"can not upload image: %s, %d, %s, %s",
-			fileHeader.Filename, fileHeader.Size, err.Error(), string(fileBase64))))
+			"can not upload image: %s, %d, %s",
+			tmpFile.Name(), tmpStat.Size(), err.Error())))
 		return
 	}
 

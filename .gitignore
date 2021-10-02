@@ -5,3 +5,4 @@ main
 .env*
 !.env.example
 .DS_Store
+__debug_bin
