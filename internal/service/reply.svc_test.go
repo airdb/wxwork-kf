@@ -34,7 +34,7 @@ func TestReply_ProcMsg(t *testing.T) {
 		{"menu msg", NewReply(nil), args{context.Background(), syncmsg.Message{
 			Origin:     3,
 			MsgType:    "text",
-			OriginData: generateTextData("帮助"),
+			OriginData: generateTextData("志愿者"),
 		}}},
 	}
 	for _, tt := range tests {
