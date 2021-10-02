@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"strings"
 
@@ -74,9 +76,10 @@ var (
 		})},
 		{"text", MatchMethodFull, "寻人", ReplyTypeText, "[寻人](在这里输入你能提供的信息)"},
 		{"text", MatchMethodFull, "线索", ReplyTypeText, "[线索](在这里输入你能提供的线索)"},
+		{"text", MatchMethodFull, "志愿者", ReplyTypeImage, strings.Join([]string{
+			app.InviteImagePrefix, "志愿者",
+		}, ":")},
 		{"text", MatchMethodFull, "人工客服", ReplyTypeActionTrans, ""},
-		{"text", MatchMethodPrefix, "[线索]", ReplyTypeActionTrans, ""},
-		{"text", MatchMethodPrefix, "[志愿者]", ReplyTypeImage, "图片ID"},
 		// TODO
 		{"image", MatchMethodImg, "【图片消息】", ReplyTypeText, "【图片消息】"},
 		{"video", MatchMethodVideo, "【视频消息】", ReplyTypeText, "【视频消息】"},
@@ -103,7 +106,20 @@ func (rt ReplyTpl) Gen(toUser, openKFID string) *types.ReplyMessage {
 	case ReplyTypeText: // 文本消息
 		ret.SetText(rt.Message.(string))
 	case ReplyTypeImage: // 图片消息
-		ret.SetImage(rt.Message.(string))
+		msg, ok := rt.Message.(string)
+		if !ok {
+			return nil
+		}
+		if strings.HasPrefix(msg, app.InviteImagePrefix) {
+			if mediaID, err := app.Redis.Get(context.Background(), msg).Result(); err == nil {
+				log.Println("debug:", mediaID)
+				ret.SetImage(mediaID)
+			} else {
+				ret.SetText(fmt.Sprintf("can no find image: %s", msg[len(app.InviteImagePrefix):]))
+			}
+		} else {
+			ret.SetImage(msg)
+		}
 	case ReplyTypeMenu: // 菜单消息
 		callback, ok := rt.Message.(ReplyCallback)
 		if ok {

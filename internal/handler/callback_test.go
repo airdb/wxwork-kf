@@ -13,17 +13,6 @@ import (
 )
 
 func Test_sendMsg(t *testing.T) {
-	file, _ := os.OpenFile("./static/727c801fe83ebe9.jpg", os.O_RDONLY, os.ModePerm)
-	fileStat, _ := file.Stat()
-	fileInfo, err := app.WxClient.MediaUpload(sdk.MediaUploadOptions{
-		Type:     "file",
-		FileName: "girl.jpeg",
-		FileSize: fileStat.Size(),
-		File:     file,
-	})
-	assert.Nil(t, err)
-	log.Println(fileInfo.MediaID)
-
 	sMsg := &sendmsg.Text{
 		Message: sendmsg.Message{
 			ToUser:   "wm2C5gEQAAex98bnNU1Fm5_U7d18pdVg",
@@ -35,6 +24,36 @@ func Test_sendMsg(t *testing.T) {
 	}
 	sMsg.Text.Content = "欢迎光临Orzlab"
 	// sMsg.Image.MediaID = fileInfo.MediaID
+
+	param, _ := json.Marshal(sMsg)
+	log.Println(string(param))
+	rMsg, err := app.WxClient.SendMsg(sMsg)
+	log.Println("result:", rMsg.MsgID, ", err:", err.Error())
+}
+
+func Test_sendMsgImage(t *testing.T) {
+	app.InitSdk()
+
+	file, _ := os.OpenFile("../../.vscode/tmp/727c801fe83ebe9.jpg", os.O_RDONLY, os.ModePerm)
+	fileStat, _ := file.Stat()
+	fileInfo, err := app.WxClient.MediaUpload(sdk.MediaUploadOptions{
+		Type:     "image",
+		FileName: "girl.jpeg",
+		FileSize: fileStat.Size(),
+		File:     file,
+	})
+	assert.Nil(t, err)
+	log.Println(fileInfo.MediaID)
+
+	sMsg := &sendmsg.Image{
+		Message: sendmsg.Message{
+			ToUser:   "wm2C5gEQAAex98bnNU1Fm5_U7d18pdVg",
+			OpenKFID: "wk2C5gEQAAge69_zMhQgfSor6thQJ8og",
+			MsgID:    "12345678901234567890123456789012",
+		},
+		MsgType: "image",
+	}
+	sMsg.Image.MediaID = fileInfo.MediaID
 
 	param, _ := json.Marshal(sMsg)
 	log.Println(string(param))

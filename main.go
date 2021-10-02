@@ -46,6 +46,7 @@ func main() {
 		r.Get("/version", faas.HandleVersion)
 		r.HandleFunc("/callback", handler.Callback)
 		r.Get("/account/list", handler.AccountList)
+		r.Put("/invite/image/{usedBy}", handler.InviteImageUpload)
 	})
 
 	faas.RunTencentChiWithSwagger(r, "wxkf")
