@@ -21,7 +21,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Success 200 {string} response "api response"
-// @Router /invite/image/{usedBy:[a-z-]+} [put]
+// @Router /invite/image/{usedBy:} [put]
 func InviteImageUpload(w http.ResponseWriter, r *http.Request) {
 	var err error
 
