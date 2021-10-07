@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/airdb/wxwork-kf/internal/service"
 	"github.com/airdb/wxwork-kf/internal/store/mysql"
@@ -66,7 +67,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 		app.Redis.Set(ctx, app.SyncMsgNextCursor, syncMsg.NextCursor, 0)
 	}
 
-	mysqlStore, err := mysql.GetFactoryOr(nil) // TODO
+	mysqlStore, err := mysql.GetFactoryOr(dbutil.WriteDefaultDB()) // TODO
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(nil)

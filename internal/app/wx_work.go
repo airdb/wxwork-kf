@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/wxwork-kf/pkg/util"
 	"github.com/go-redis/redis/v8"
 	"github.com/silenceper/wechat/v2/cache"
@@ -29,6 +30,9 @@ var (
 
 func InitWxWork() {
 	var err error
+
+	// Init Database.
+	dbutil.InitDefaultDB()
 
 	redisDB, err := strconv.Atoi(os.Getenv("WXKF_REDIS_DB"))
 	if err != nil {
