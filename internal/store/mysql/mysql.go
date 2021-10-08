@@ -32,6 +32,7 @@ func (ds *datastore) Close() error {
 var (
 	mysqlFactory store.Factory
 	mysqlOnce         sync.Once
+	once         sync.Once
 	readDB		*gorm.DB
 	writeDB		*gorm.DB
 )
