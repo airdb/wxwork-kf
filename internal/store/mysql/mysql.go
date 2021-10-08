@@ -31,7 +31,7 @@ func (ds *datastore) Close() error {
 
 var (
 	mysqlFactory store.Factory
-	once         sync.Once
+	mysqlOnce         sync.Once
 	readDB		*gorm.DB
 	writeDB		*gorm.DB
 )
@@ -40,7 +40,7 @@ var (
 func GetFactoryOr(db *gorm.DB) (store.Factory, error) {
 	var err error
 	var dbIns *gorm.DB
-	once.Do(func() {
+	mysqlOnce.Do(func() {
 		dbIns = db
 		mysqlFactory = &datastore{dbIns}
 	})
