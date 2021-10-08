@@ -169,6 +169,7 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 
 	switch m := data.(type) {
 	case *types.ReplyMessage: // 返回的消息
+		log.Println("ReplyMessage")
 		talk = &schema.Talk{
 			OpenKFID: m.OpenKFID,
 			ToUserID: m.ToUser,
@@ -182,6 +183,7 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 			Content:  m.ContentImage,
 		}
 	case *syncmsg.Message: // 同步到的消息
+		log.Println("syncmsg")
 		talk = &schema.Talk{
 			OpenKFID: m.OpenKFID,
 			ToUserID: m.ExternalUserID,
@@ -198,6 +200,8 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 		log.Fatalf("save unknown data %v", data)
 	}
 
+	log.Println("OpenKFID", talk.OpenKFID)
+	log.Println("ToUserID", talk.ToUserID)
 	talk, err := s.store.Talks().FirstOrCreate(ctx, talk.OpenKFID, talk.ToUserID)
 	if err != nil {
 		return
