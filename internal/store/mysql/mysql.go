@@ -59,7 +59,7 @@ func GetFactoryOr(db *gorm.DB) (store.Factory, error) {
 
 // GetConnection  get mysql connection, default is write DB
 func GetConnection()*gorm.DB{
-	once.Do(func() {
+	mysqlOnce.Do(func() {
 		fmt.Println("123123")
 		dbutil.InitDefaultDB()
 		writeDB =  dbutil.WriteDefaultDB()
