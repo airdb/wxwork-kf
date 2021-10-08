@@ -7,18 +7,18 @@ import (
 	"os"
 )
 
-func Tfidf(input string) (result string, err error){
+func Tfidf(input string) (result string, err error) {
 	ak := os.Getenv("TfidfAk")
 	url := os.Getenv("TfidfUrl")
 	welcomeMsg := os.Getenv("WelcomeMsg")
 
 	req := requests.Requests()
 	params := requests.Params{
-		"ak": ak,
-		"question":  input,
+		"ak":       ak,
+		"question": input,
 	}
-	req.Header.Set("Content-Type","application/json")
-	resp,err := req.Get(url,params)
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := req.Get(url, params)
 	if err != nil {
 		fmt.Println("req err: ", err)
 		return

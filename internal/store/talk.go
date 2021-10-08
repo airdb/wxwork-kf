@@ -11,3 +11,8 @@ type TalkStore interface {
 	Create(ctx context.Context, talk *schema.Talk) error
 	FirstOrCreate(ctx context.Context, openKFID, toUserID string) (*schema.Talk, error)
 }
+
+// TalkStore defines the message storage interface.
+type MessageStore interface {
+	Create(ctx context.Context, msg *schema.Message) error
+}

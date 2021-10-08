@@ -17,6 +17,10 @@ func (ds *datastore) Talks() store.TalkStore {
 	return newTalks(ds)
 }
 
+func (ds *datastore) Messages() store.MessageStore {
+	return newMessages(ds)
+}
+
 func (ds *datastore) Close() error {
 	db, err := ds.db.DB()
 	if err != nil {
