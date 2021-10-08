@@ -2,9 +2,12 @@ package mysql
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
+	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/wxwork-kf/internal/store"
+
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
@@ -33,6 +36,8 @@ func (ds *datastore) Close() error {
 var (
 	mysqlFactory store.Factory
 	once         sync.Once
+	readDB		*gorm.DB
+	writeDB		*gorm.DB
 )
 
 // GetFactoryOr create mysql factory with the given config.
@@ -49,4 +54,19 @@ func GetFactoryOr(db *gorm.DB) (store.Factory, error) {
 	}
 
 	return mysqlFactory, nil
+}
+
+// GetConnection  get mysql connection, default is write DB
+func GetConnection()*gorm.DB{
+	once.Do(func() {
+		fmt.Println("123123")
+		dbutil.InitDefaultDB()
+		writeDB =  dbutil.WriteDefaultDB()
+		readDB =  dbutil.ReadDefaultDB()
+	})
+	if writeDB == nil {
+		log.Println("mysql 连接失败")
+		panic("mysql 连接失败")
+	}
+	return writeDB
 }
