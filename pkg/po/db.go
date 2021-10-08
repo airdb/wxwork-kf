@@ -5,6 +5,6 @@ import (
 )
 
 // InitDB  初始化db
-func InitDB(){
+func InitDB() {
 	dbutil.InitDefaultDB()
 }

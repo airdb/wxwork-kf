@@ -16,8 +16,7 @@ type WxKfLog struct {
 	MsgID    string `gorm:"type:varchar(100)"json:"msg_id"`
 }
 
-
-func (WxKfLog) TableName() string{
+func (WxKfLog) TableName() string {
 	return "tab_wx_kf_log"
 }
 
@@ -31,8 +30,7 @@ func (u *WxKfLog) BeforeSave(tx *gorm.DB) (err error) {
 	return nil
 }
 
-
-func WxKfLogSave(data *WxKfLog) error{
+func WxKfLogSave(data *WxKfLog) error {
 	fmt.Println(data)
 	return dbutil.WriteDefaultDB().Debug().Create(data).Error
 }

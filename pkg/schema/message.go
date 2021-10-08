@@ -10,7 +10,7 @@ type Message struct {
 	Msgid          string    `gorm:"type:varchar(100);column:msg_id"          json:"msgid"`
 	Msgtype        string    `gorm:"type:varchar(16);column:msg_type"         json:"msgtype"`
 	SendTime       time.Time `gorm:"type:timestamp;column:send_time"         json:"sendTime"`
-	ServiceUserid string    `gorm:"type:varchar(100);column:service_userid" json:"serviceUserid"`
+	ServicerUserid string    `gorm:"type:varchar(100);column:servicer_userid" json:"servicerUserid"`
 	Content        string    `gorm:"type:text;column:content"                json:"content"`
 	Raw            string    `gorm:"type:text;column:raw"                    json:"raw"`
 }
