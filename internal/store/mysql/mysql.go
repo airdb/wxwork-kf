@@ -45,7 +45,7 @@ var (
 func GetFactoryOr(db *gorm.DB) (store.Factory, error) {
 	var err error
 	var dbIns *gorm.DB
-	mysqlOnce.Do(func() {
+	once.Do(func() {
 		dbIns = db
 		mysqlFactory = &datastore{dbIns}
 	})
