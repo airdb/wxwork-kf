@@ -45,7 +45,7 @@ inputs:
       WXKF_ENCODING_AES_KEY: ${env:WXKF_ENCODING_AES_KEY}
       MAIN_DSN_WRITE: ${env:MAIN_DSN_WRITE}
       MAIN_DSN_READ: ${env:MAIN_DSN_READ}
-
+      TZ: ${env:TZ}
   publicAccess: true # 是否开启公网访问
 
   events:
