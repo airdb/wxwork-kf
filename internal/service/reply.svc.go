@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -204,7 +203,7 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 	log.Println("OpenKFID", talk.OpenKFID)
 	log.Println("ToUserID", talk.ToUserID)
 	talk, err := s.store.Talks().FirstOrCreate(ctx, talk.OpenKFID, talk.ToUserID)
-	fmt.Println("FirstOrCreate", err)
+	log.Println("FirstOrCreate err : ",err.Error())
 	if err != nil {
 		return
 	}
