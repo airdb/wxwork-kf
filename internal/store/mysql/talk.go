@@ -31,7 +31,7 @@ func (u *talks) FirstOrCreate(ctx context.Context, openKFID, toUserID string) (*
 	if err := u.db.Where(&talk).First(&talk).Error; err == nil {
 		return &talk, nil
 	}
-	if len(talk.ID) >0 {
+	if len(talk.ID) > 0 {
 		return &talk, nil
 	}
 	if err := u.db.Create(&talk).Error; err == nil {
@@ -39,4 +39,8 @@ func (u *talks) FirstOrCreate(ctx context.Context, openKFID, toUserID string) (*
 	} else {
 		return nil, err
 	}
+}
+// SaveContent save message
+func (u *talks) SaveContent(ctx context.Context,content *schema.Message) error {
+
 }
