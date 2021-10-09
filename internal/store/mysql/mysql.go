@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
 	"github.com/airdb/sailor/dbutil"
@@ -38,6 +39,7 @@ var (
 
 // GetFactoryOr create mysql factory with the given config.
 func GetFactoryOr(db *gorm.DB) (store.Factory, error) {
+	log.Println("GetFactoryOr")
 	var err error
 	var dbIns *gorm.DB
 	once.Do(func() {
