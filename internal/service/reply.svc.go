@@ -167,6 +167,7 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 		msg  *schema.Message
 	)
 
+	log.Println("start save msg")
 	switch m := data.(type) {
 	case *types.ReplyMessage: // 返回的消息
 		log.Println("ReplyMessage")
