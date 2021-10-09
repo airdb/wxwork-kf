@@ -209,5 +209,5 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 	msg.TalkID = talk.ID
 
 	// TODO 保存消息
-	// s.store.Talks().Create(ctx, msg)
+	s.store.Talks().SaveContent(ctx, msg)
 }
