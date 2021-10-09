@@ -75,6 +75,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	replySvc := service.NewReply(mysqlStore)
+	log.Println("replySvc",replySvc)
 	for _, msg := range syncMsg.MsgList {
 		log.Println("sync from wechat, msg:", msg)
 		replySvc.ProcMsg(ctx, msg)
