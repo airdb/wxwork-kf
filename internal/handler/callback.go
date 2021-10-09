@@ -76,6 +76,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 
 	replySvc := service.NewReply(mysqlStore)
 	log.Println("replySvc",replySvc)
+	log.Println("syncMsg.MsgList",len(syncMsg.MsgList))
 	for _, msg := range syncMsg.MsgList {
 		replySvc.ProcMsg(ctx, msg)
 	}
