@@ -67,6 +67,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	mysqlStore, err := mysql.GetFactoryOr(mysql.GetConnection()) // TODO
+	log.Println("mysqlStore",mysqlStore,err)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(nil)
