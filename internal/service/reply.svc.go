@@ -72,7 +72,7 @@ func (s Reply) userMsg(ctx context.Context, msg syncmsg.Message) {
 	case ReplyTypeActionTrans: // 分配客服会话
 		hasMsgSendOk = s.transMsg(msg, ret)
 	}
-
+	log.Println("hasMsgSendOk:", hasMsgSendOk)
 	if hasMsgSendOk {
 		s.saveMsg(ctx, msgResp)
 	}
