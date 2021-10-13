@@ -198,7 +198,12 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 			Msgid:    m.MsgID,
 			Msgtype:  m.MsgType,
 			SendTime: time.Unix(int64(m.SendTime), 0),
-			Content:  string(m.GetOriginMessage()),
+			Content:  "",
+			Raw:      string(m.GetOriginMessage()),
+		}
+		if m.MsgType == "text" {
+			content, _ := m.GetTextMessage()
+			msg.Content = content.Text.Content
 		}
 	default:
 		log.Fatalf("save unknown data %v", data)
