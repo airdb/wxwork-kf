@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/wxwork-kf/internal/app"
 	"github.com/airdb/wxwork-kf/internal/service"
 	"github.com/airdb/wxwork-kf/internal/store/mysql"
@@ -83,6 +84,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	log.Println("replySvc",replySvc)
 	log.Println("syncMsg.MsgList",len(syncMsg.MsgList))
 	for _, msg := range syncMsg.MsgList {
+		log.Println("sync from wechat, msg:", msg)
 		replySvc.ProcMsg(ctx, msg)
 	}
 

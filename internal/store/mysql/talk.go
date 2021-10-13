@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"log"
 
 	"github.com/airdb/wxwork-kf/pkg/schema"
 	"gorm.io/gorm"
@@ -17,6 +18,7 @@ func newTalks(ds *datastore) *talks {
 
 // Create creates a new talk item.
 func (u *talks) Create(ctx context.Context, talk *schema.Talk) error {
+	log.Println("record talk, value: ", talk)
 	return u.db.Create(&talk).Error
 }
 
