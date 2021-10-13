@@ -68,7 +68,7 @@ func (s Reply) userMsg(ctx context.Context, msg syncmsg.Message) {
 		log.Fatalf("can not assume msg: %s", err.Error())
 		return
 	}
-
+	log.Println(msg)
 	switch rTpl.ReplyType {
 	case ReplyTypeText, ReplyTypeImage, ReplyTypeMenu:
 		hasMsgSendOk = s.sendMsg(msg, ret)
@@ -184,7 +184,7 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 			Msgid:    m.MsgID,
 			Msgtype:  m.ReplyType,
 			SendTime: time.Now(),
-			Content:  m.ContentImage,
+			Content:  m.ContentText,
 		}
 	case *syncmsg.Message: // 同步到的消息
 		log.Println("syncmsg")
@@ -209,17 +209,15 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 		log.Fatalf("save unknown data %v", data)
 	}
 
-	log.Println("OpenKFID", talk.OpenKFID)
-	log.Println("ToUserID", talk.ToUserID)
 	talk, err := s.store.Talks().FirstOrCreate(ctx, talk.OpenKFID, talk.ToUserID)
-	log.Println("FirstOrCreate err : ", err)
 	if err != nil {
 		return
 	}
 	msg.TalkID = talk.ID
-	log.Println("msg", msg)
+	log.Println("msg", *msg)
 	// TODO 保存消息
 	err = s.store.Talks().SaveContent(ctx, msg)
+	log.Println("s.store.Talks().SaveContent(ctx, msg) err", err)
 	if err != nil {
 		return
 	}
