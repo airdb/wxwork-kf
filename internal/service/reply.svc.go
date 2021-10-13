@@ -212,7 +212,7 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 	log.Println("OpenKFID", talk.OpenKFID)
 	log.Println("ToUserID", talk.ToUserID)
 	talk, err := s.store.Talks().FirstOrCreate(ctx, talk.OpenKFID, talk.ToUserID)
-	log.Println("FirstOrCreate err : ", err.Error())
+	log.Println("FirstOrCreate err : ", err)
 	if err != nil {
 		return
 	}
