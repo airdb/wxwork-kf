@@ -59,11 +59,16 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 		syncMsgOpts.Cursor = cursor
 	}
 
-	app.Redis.Set(ctx, app.SyncMsgNextCursor, cbMsg.Token, 0)
+	//app.Redis.Set(ctx, app.SyncMsgNextCursor, cbMsg.Token, 0)
 	syncMsg, err := app.WxWorkKF.SyncMsg(syncMsgOpts)
 	if err == nil {
 		// 保存本次消息游标
 		app.Redis.Set(ctx, app.SyncMsgNextCursor, syncMsg.NextCursor, 0)
+
+	}else{
+		log.Println("app.WxWorkKF.SyncMsg error :", err)
+		// 清空游标，不然下次报游标错误
+		app.Redis.Del(ctx, app.SyncMsgNextCursor)
 	}
 
 	mysqlStore, err := mysql.GetFactoryOr(mysql.GetConnection()) // TODO
