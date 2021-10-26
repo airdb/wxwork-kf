@@ -5,7 +5,6 @@ import (
 	"log"
 	"sync"
 
-	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/wxwork-kf/internal/store"
 
 	"github.com/pkg/errors"
@@ -35,10 +34,7 @@ func (ds *datastore) Close() error {
 
 var (
 	mysqlFactory store.Factory
-	mysqlOnce    sync.Once
 	once         sync.Once
-	readDB       *gorm.DB
-	writeDB      *gorm.DB
 )
 
 // GetFactoryOr create mysql factory with the given config.
@@ -56,14 +52,4 @@ func GetFactoryOr(db *gorm.DB) (store.Factory, error) {
 	}
 
 	return mysqlFactory, nil
-}
-
-// GetConnection  get mysql connection, default is write DB
-func GetConnection() *gorm.DB {
-	mysqlOnce.Do(func() {
-		dbutil.InitDefaultDB()
-	})
-	writeDB = dbutil.WriteDefaultDB()
-	readDB = dbutil.ReadDefaultDB()
-	return writeDB
 }
