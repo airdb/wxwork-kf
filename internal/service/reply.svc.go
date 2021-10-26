@@ -26,9 +26,7 @@ func NewReply(store store.Factory) *Reply {
 }
 
 // ProcMsg 处理单条消息, 并按消息来源颁发给不同的处理过程
-func (s Reply) ProcMsg(ctx context.Context, msg syncmsg.Message) {
-	log.Println("msg.Origin", msg.Origin)
-	// 记录用户发送的消息
+func (s Reply) ProcMsg(ctx context.Context, msg syncmsg.Message) { // 记录用户发送的消息
 	s.saveMsg(ctx, &msg)
 	switch msg.Origin {
 	case 3: // 客户回复的消息

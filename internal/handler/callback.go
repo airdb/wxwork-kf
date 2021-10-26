@@ -65,7 +65,6 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		// 保存本次消息游标
 		app.Redis.Set(ctx, app.SyncMsgNextCursor, syncMsg.NextCursor, 0)
-
 	}else{
 		log.Println("app.WxWorkKF.SyncMsg error :", err)
 		// 清空游标，不然下次报游标错误
@@ -81,8 +80,6 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	replySvc := service.NewReply(mysqlStore)
-	log.Println("replySvc",replySvc)
-	log.Println("syncMsg.MsgList",len(syncMsg.MsgList))
 	for _, msg := range syncMsg.MsgList {
 		log.Println("sync from wechat, msg:", msg)
 		replySvc.ProcMsg(ctx, msg)
