@@ -40,3 +40,7 @@ func (u *talks) FirstOrCreate(ctx context.Context, openKFID, toUserID string) (*
 		return nil, err
 	}
 }
+// SaveContent save message
+func (u *talks) SaveContent(ctx context.Context,content *schema.Message) error {
+	return u.db.Create(content).Debug().Error
+}

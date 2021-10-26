@@ -72,7 +72,8 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 		app.Redis.Del(ctx, app.SyncMsgNextCursor)
 	}
 
-	mysqlStore, err := mysql.GetFactoryOr(dbutil.WriteDefaultDB()) // TODO
+	mysqlStore, err := mysql.GetFactoryOr(mysql.GetConnection()) // TODO
+	log.Println("mysqlStore",mysqlStore,err)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(nil)

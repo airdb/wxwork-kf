@@ -75,7 +75,7 @@ func (s Reply) userMsg(ctx context.Context, msg syncmsg.Message) {
 	case ReplyTypeActionTrans: // 分配客服会话
 		hasMsgSendOk = s.transMsg(msg, ret)
 	}
-	log.Println("hasMsgSendOk:", hasMsgSendOk)
+
 	if hasMsgSendOk {
 		s.saveMsg(ctx, msgResp)
 	}
@@ -170,10 +170,8 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 		msg  *schema.Message
 	)
 
-	log.Println("start save msg")
 	switch m := data.(type) {
 	case *types.ReplyMessage: // 返回的消息
-		log.Println("ReplyMessage")
 		talk = &schema.Talk{
 			OpenKFID: m.OpenKFID,
 			ToUserID: m.ToUser,
@@ -184,10 +182,9 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 			Msgid:    m.MsgID,
 			Msgtype:  m.ReplyType,
 			SendTime: time.Now(),
-			Content:  m.ContentImage,
+			Content:  m.ContentText,
 		}
 	case *syncmsg.Message: // 同步到的消息
-		log.Println("syncmsg")
 		talk = &schema.Talk{
 			OpenKFID: m.OpenKFID,
 			ToUserID: m.ExternalUserID,
@@ -209,15 +206,13 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 		log.Fatalf("save unknown data %v", data)
 	}
 
-	log.Println("OpenKFID", talk.OpenKFID)
-	log.Println("ToUserID", talk.ToUserID)
 	talk, err := s.store.Talks().FirstOrCreate(ctx, talk.OpenKFID, talk.ToUserID)
 	log.Println("FirstOrCreate err : ", err)
 	if err != nil {
 		return
 	}
 	msg.TalkID = talk.ID
-	log.Println("msg", *msg)
+
 	// TODO 保存消息
 	err = s.store.Messages().Create(ctx, msg)
 	log.Println("s.store.Messages().Create(ctx, msg) err", err)
