@@ -219,8 +219,8 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 	msg.TalkID = talk.ID
 	log.Println("msg", *msg)
 	// TODO 保存消息
-	err = s.store.Talks().SaveContent(ctx, msg)
-	log.Println("s.store.Talks().SaveContent(ctx, msg) err", err)
+	err = s.store.Messages().Create(ctx, msg)
+	log.Println("s.store.Messages().Create(ctx, msg) err", err)
 	if err != nil {
 		return
 	}
