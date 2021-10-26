@@ -2,9 +2,11 @@ package mysql
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
 	"github.com/airdb/wxwork-kf/internal/store"
+
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
@@ -37,6 +39,7 @@ var (
 
 // GetFactoryOr create mysql factory with the given config.
 func GetFactoryOr(db *gorm.DB) (store.Factory, error) {
+	log.Println("GetFactoryOr")
 	var err error
 	var dbIns *gorm.DB
 	once.Do(func() {

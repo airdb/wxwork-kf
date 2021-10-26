@@ -26,7 +26,8 @@ func NewReply(store store.Factory) *Reply {
 }
 
 // ProcMsg 处理单条消息, 并按消息来源颁发给不同的处理过程
-func (s Reply) ProcMsg(ctx context.Context, msg syncmsg.Message) {
+func (s Reply) ProcMsg(ctx context.Context, msg syncmsg.Message) { // 记录用户发送的消息
+	s.saveMsg(ctx, &msg)
 	switch msg.Origin {
 	case 3: // 客户回复的消息
 		s.userMsg(ctx, msg)
@@ -179,7 +180,7 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 			Msgid:    m.MsgID,
 			Msgtype:  m.ReplyType,
 			SendTime: time.Now(),
-			Content:  m.ContentImage,
+			Content:  m.ContentText,
 		}
 	case *syncmsg.Message: // 同步到的消息
 		talk = &schema.Talk{
@@ -192,18 +193,29 @@ func (s Reply) saveMsg(ctx context.Context, data interface{}) {
 			Msgid:    m.MsgID,
 			Msgtype:  m.MsgType,
 			SendTime: time.Unix(int64(m.SendTime), 0),
-			Content:  string(m.GetOriginMessage()),
+			Content:  "",
+			Raw:      string(m.GetOriginMessage()),
+		}
+		if m.MsgType == "text" {
+			content, _ := m.GetTextMessage()
+			msg.Content = content.Text.Content
 		}
 	default:
 		log.Fatalf("save unknown data %v", data)
 	}
 
 	talk, err := s.store.Talks().FirstOrCreate(ctx, talk.OpenKFID, talk.ToUserID)
+	log.Println("FirstOrCreate err : ", err)
 	if err != nil {
 		return
 	}
 	msg.TalkID = talk.ID
 
 	// TODO 保存消息
-	s.store.Messages().Create(ctx, msg)
+	err = s.store.Messages().Create(ctx, msg)
+	log.Println("s.store.Messages().Create(ctx, msg) err", err)
+	if err != nil {
+		return
+	}
+
 }
