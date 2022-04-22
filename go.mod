@@ -4,15 +4,13 @@ go 1.17
 
 require (
 	github.com/airdb/sailor v0.0.0-20210905152253-99ba97e2e89a
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/asmcos/requests v0.0.0-20210319030608-c839e8ae4946
 	github.com/go-chi/chi/v5 v5.0.4
 	github.com/go-chi/render v1.0.1
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/stretchr/testify v1.7.0
-	github.com/swaggo/http-swagger v1.1.1
-	github.com/swaggo/swag v1.7.1
+	github.com/swaggo/http-swagger/example/go-chi v0.0.0-20220422142103-03737aea3ffd
 	gorm.io/gorm v1.21.15
 )
 
@@ -28,7 +26,7 @@ require (
 	github.com/gin-gonic/gin v1.7.4 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
-	github.com/go-openapi/spec v0.20.3 // indirect
+	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -54,7 +52,7 @@ require (
 	golang.org/x/net v0.0.0-20210908191846-a5e095526f91 // indirect
 	golang.org/x/sys v0.0.0-20210910150752-751e447fb3d0 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/tools v0.1.5 // indirect
+	golang.org/x/tools v0.1.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
@@ -64,4 +62,5 @@ require (
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
+	github.com/swaggo/swag v1.7.9 // indirect
 )
