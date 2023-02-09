@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/airdb/sailor v0.0.0-20210905152253-99ba97e2e89a
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/asmcos/requests v0.0.0-20210319030608-c839e8ae4946
 	github.com/go-chi/chi/v5 v5.0.4
 	github.com/go-chi/render v1.0.1
@@ -12,7 +11,6 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/stretchr/testify v1.7.0
 	github.com/swaggo/http-swagger v1.1.1
-	github.com/swaggo/swag v1.7.1
 	gorm.io/gorm v1.21.15
 )
 
@@ -25,7 +23,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-gonic/gin v1.7.4 // indirect
+	github.com/gin-gonic/gin v1.7.7 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/go-openapi/spec v0.20.3 // indirect
@@ -64,4 +62,5 @@ require (
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
+	github.com/swaggo/swag v1.7.1 // indirect
 )
