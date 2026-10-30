@@ -1,18 +1,16 @@
 module github.com/airdb/wxwork-kf
 
-go 1.17
+go 1.24
 
 require (
 	github.com/airdb/sailor v0.0.0-20210905152253-99ba97e2e89a
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/asmcos/requests v0.0.0-20210319030608-c839e8ae4946
-	github.com/go-chi/chi/v5 v5.0.4
+	github.com/go-chi/chi/v5 v5.4.0
 	github.com/go-chi/render v1.0.1
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/stretchr/testify v1.7.0
 	github.com/swaggo/http-swagger v1.1.1
-	github.com/swaggo/swag v1.7.1
 	gorm.io/gorm v1.21.15
 )
 
@@ -64,4 +62,5 @@ require (
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
+	github.com/swaggo/swag v1.7.1 // indirect
 )
