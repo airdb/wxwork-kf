@@ -1,6 +1,6 @@
 module github.com/airdb/wxwork-kf
 
-go 1.24
+go 1.25.0
 
 require (
 	github.com/airdb/sailor v0.0.0-20210905152253-99ba97e2e89a
@@ -48,11 +48,11 @@ require (
 	github.com/serverless-plus/tencent-serverless-go v1.0.1 // indirect
 	github.com/silenceper/wechat/v2 v2.0.9
 	github.com/ugorji/go/codec v1.2.6 // indirect
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
-	golang.org/x/net v0.0.0-20210908191846-a5e095526f91 // indirect
-	golang.org/x/sys v0.0.0-20210910150752-751e447fb3d0 // indirect
-	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/tools v0.1.5 // indirect
+	golang.org/x/crypto v0.52.0 // indirect
+	golang.org/x/net v0.54.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/text v0.37.0 // indirect
+	golang.org/x/tools v0.44.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
